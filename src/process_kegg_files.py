@@ -3,6 +3,15 @@ import argparse
 import pandas as pd
 
 def read_organism_table(org_table_filename):
+    """
+    Takes as argument the organism table filename with full path.
+    Returns a dictionary indexed by 3-character organism code, mapping to a list
+    of contig ids.
+    :param str org_table_filename: full path to organism filename
+    :return: dictionary indexed by 3-character organism code, mapping to a list
+    of contig ids.
+    :rtype: dic
+    """
     # read dataframe
     df = pd.read_csv(org_table_filename, delimiter='\t')
 
@@ -27,6 +36,15 @@ def read_organism_table(org_table_filename):
     return ret_dic
 
 def read_organism_table_for_single_chr_organisms(org_table_filename):
+    """
+    Takes as argument the organism table filename with full path.
+    Returns a dictionary indexed by 3-character organism code, mapping to a list
+    of contig ids. Only those bacteria with single chromosome are kept.
+    :param str org_table_filename: full path to organism filename
+    :return: dictionary indexed by 3-character organism code, mapping to a list
+    of contig ids.
+    :rtype: dic
+    """
     # read dataframe
     df = pd.read_csv(org_table_filename, delimiter='\t')
 
@@ -53,12 +71,24 @@ def read_organism_table_for_single_chr_organisms(org_table_filename):
     return ret_dic
 
 def read_gene_ids(kegg_gene_filename):
+    """
+    Given a kegg gene filename, returns list of all genes
+    :param str kegg_gene_filename: filename with full path
+    :return: all gene ids in that file
+    :rtype: list
+    """
     f = open(kegg_gene_filename, 'r')
     lines = f.readlines()[1:]
     f.close()
     return [ line.split(' ')[0].split('\t')[0] for line in lines ]
 
 def read_gene_id_with_ko(kegg_gene_filename):
+    """
+    Given a kegg gene filename, returns list of all genes with KO ids available
+    :param str kegg_gene_filename: filename with full path
+    :return: all gene ids in that file
+    :rtype: list
+    """
     df = pd.read_csv(kegg_gene_filename, delimiter='\t')
     df = df[ ~pd.isnull(df['koid']) ]
     return(df['kegg_gene_id'].tolist())
