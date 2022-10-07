@@ -58,15 +58,19 @@ def read_gene_ids(kegg_gene_filename):
     f.close()
     return [ line.split(' ')[0].split('\t')[0] for line in lines ]
 
+def read_gene_id_with_ko(kegg_gene_filename):
+    df = pd.read_csv(kegg_gene_filename, delimiter='\t')
+    df = df[ ~pd.isnull(df['koid']) ]
+    return(df['kegg_gene_id'].tolist())
 
-def parse_args():
+def parse_args(): # pragma: no cover
     parser = argparse.ArgumentParser(description="This preprocesses kegg_db data files. It opens the organisms table, locates the genomes that has GenBank or RefSeq entries available.",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-o', '--org_table_file', type=str, help="The organisms table file.")
     args = parser.parse_args()
     return args
 
-if __name__ == '__main__':
+def main(): # pragma: no cover
     args = parse_args()
     org_table_filename = args.org_table_file
     org_code_to_ncbi_ids = read_organism_table(org_table_filename)
@@ -77,7 +81,14 @@ if __name__ == '__main__':
 
     sample_gene_filename = 'data/sce_kegg_genes.txt'
     gene_ids = read_gene_ids(sample_gene_filename)
-    #print(gene_ids)
+    print(len(gene_ids))
+
+    sample_gene_filename = 'data/sce_kegg_genes.txt'
+    gene_ids = read_gene_id_with_ko(sample_gene_filename)
+    print(len(gene_ids))
+
+if __name__ == '__main__': # pragma: no cover
+    main()
 
     ## We now know a lot
     ## The same exact coords to be used
