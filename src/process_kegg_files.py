@@ -93,6 +93,17 @@ def read_gene_id_with_ko(kegg_gene_filename):
     df = df[ ~pd.isnull(df['koid']) ]
     return(df['kegg_gene_id'].tolist())
 
+def read_gene_id_with_kos_labeled(kegg_gene_filename):
+    """
+    Given a kegg gene filename, returns list of all genes with KO ids available
+    :param str kegg_gene_filename: filename with full path
+    :return: all gene ids in that file, along with their assigned KO ids
+    :rtype: list of 2-tuples, tuple[0] is the gene id, tuple[1] is the KOid
+    """
+    df = pd.read_csv(kegg_gene_filename, delimiter='\t')
+    df = df[ ~pd.isnull(df['koid']) ]
+    return(  list( zip( df['kegg_gene_id'].tolist(), df['koid'].tolist() ) )  )
+
 def parse_args(): # pragma: no cover
     parser = argparse.ArgumentParser(description="This preprocesses kegg_db data files. It opens the organisms table, locates the genomes that has GenBank or RefSeq entries available.",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
