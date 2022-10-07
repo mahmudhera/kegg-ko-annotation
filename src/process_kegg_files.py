@@ -3,6 +3,7 @@ import argparse
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+from os.path import exists
 
 def read_organism_table(org_table_filename):
     """
@@ -142,6 +143,14 @@ def read_gene_start_and_end_positions(kegg_gene_id):
 
     return (-1, -1)
 
+def make_kegg_gene_file_name(org_code):
+    """
+    Using org_code (3-character code for organisms), returns kegg gene filename
+    :param str org_code: 3-character code for organisms, internal to kegg database
+    :return: kegg gene filename
+    """
+    return org_code + '_kegg_genes.txt'
+
 def parse_args(): # pragma: no cover
     parser = argparse.ArgumentParser(description="This preprocesses kegg_db data files. It opens the organisms table, locates the genomes that has GenBank or RefSeq entries available.",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -162,6 +171,14 @@ def main(): # pragma: no cover
     print('Num of all bacteria organism with single chromosome:')
     org_code_to_ncbi_ids_single_chr = read_organism_table(org_table_filename)
     print( len( org_code_to_ncbi_ids_single_chr.keys() ) )
+
+    directory_with_kegg_gene_files = '/data/shared_data/KEGG_data/organisms/kegg_gene_info'
+    list_bacteria_single_chr_with_existing_gene_file = []
+    for org_code in org_code_to_ncbi_ids_single_chr.keys():
+        gene_filename = make_kegg_gene_file_name(org_code)
+        file_with_path = directory_with_kegg_gene_files + '/' + gene_filename
+        print(exists(file_with_path))
+        break
 
     # for all these organisms
         # if kegg gene file not existing, then skip
