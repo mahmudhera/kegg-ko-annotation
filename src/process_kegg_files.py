@@ -106,7 +106,7 @@ def read_gene_id_with_kos_labeled(kegg_gene_filename):
     df = df[ ~pd.isnull(df['koid']) ]
     return(  list( zip( df['kegg_gene_id'].tolist(), df['koid'].tolist() ) )  )
 
-def download_page(url): #pragma no cover
+def download_page(url):
     while True:
         response = requests.get(url)
         response.raise_for_status()
