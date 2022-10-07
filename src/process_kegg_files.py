@@ -73,11 +73,40 @@ def parse_args(): # pragma: no cover
 def main(): # pragma: no cover
     args = parse_args()
     org_table_filename = args.org_table_file
+
+    # get list of all bacteria organisms
     org_code_to_ncbi_ids = read_organism_table(org_table_filename)
+    print('Num of all bacteria organism:')
     print( len( org_code_to_ncbi_ids.keys() ) )
 
+    # get all bacteria with single chromosome
+    print('Num of all bacteria organism with single chromosome:')
     org_code_to_ncbi_ids_single_chr = read_organism_table(org_table_filename)
     print( len( org_code_to_ncbi_ids_single_chr.keys() ) )
+
+    # for all these organisms
+        # if kegg gene file not existing, then skip
+
+    # report reduced num of organisms
+
+    # for all these organisms:
+        # look in the directory and find all genes with KOs present
+
+    # report num of all genes here
+
+    # for all these organisms
+        # get a list of all the genes with KOs present
+        # make a directory for this organism
+        # write fasta file in that
+
+        # for all the genes:
+            # look up KEGG website
+            # get the position of that gene
+            # create an entry in the mapping file
+
+        # write mapping file
+
+    # print number of genes
 
     sample_gene_filename = 'data/sce_kegg_genes.txt'
     gene_ids = read_gene_ids(sample_gene_filename)
