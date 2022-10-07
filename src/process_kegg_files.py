@@ -177,8 +177,11 @@ def main(): # pragma: no cover
     for org_code in org_code_to_ncbi_ids_single_chr.keys():
         gene_filename = make_kegg_gene_file_name(org_code)
         file_with_path = directory_with_kegg_gene_files + '/' + gene_filename
-        print(exists(file_with_path))
-        break
+        if exists(file_with_path):
+            list_bacteria_single_chr_with_existing_gene_file.append(org_code)
+
+    print('Number of bacterial organisms with single chromosome and exiting gene file:')
+    print( len(list_bacteria_single_chr_with_existing_gene_file) )
 
     # for all these organisms
         # if kegg gene file not existing, then skip
