@@ -4,6 +4,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from os.path import exists
+from Bio import SeqIO
 
 def read_organism_table(org_table_filename):
     """
@@ -190,7 +191,7 @@ def main(): # pragma: no cover
         gene_file_with_path = directory_with_kegg_gene_files + '/' + gene_filename
         all_genes_and_kos = all_genes_and_kos + read_gene_id_with_kos_labeled(gene_file_with_path)
         selected_organisms.append(org_code)
-        if len(all_genes_and_kos) > 100000:
+        if len(all_genes_and_kos) > 200000:
             break
         print(org_code, len(all_genes_and_kos))
 
@@ -199,6 +200,15 @@ def main(): # pragma: no cover
     print('Number of total genes in these organisms:')
     print(len(all_genes_and_kos))
 
+    print('Constructing database now...')
+
+    long_fasta_filename = 'gb_ncbi_organism.fasta'
+    record_dict = SeqIO.index(long_fasta_filename, "fasta")
+    for org_code in selected_organisms:
+        print('Working with organism ' + org_code)
+        ncbi_id = org_code_to_ncbi_ids[org_code]
+        print(record_dict[ncbi_id])
+        break
     # for all these organisms
         # get a list of all the genes with KOs present
         # make a directory for this organism
@@ -212,18 +222,6 @@ def main(): # pragma: no cover
         # write mapping file
 
     # print number of genes
-
-    sample_gene_filename = 'data/sce_kegg_genes.txt'
-    gene_ids = read_gene_ids(sample_gene_filename)
-    print(len(gene_ids))
-
-    print(gene_ids[:10])
-
-    sample_gene_filename = 'data/sce_kegg_genes.txt'
-    gene_ids = read_gene_id_with_ko(sample_gene_filename)
-    print(len(gene_ids))
-
-    print(gene_ids[:10])
 
 if __name__ == '__main__': # pragma: no cover
     main()
