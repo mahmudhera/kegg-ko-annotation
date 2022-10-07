@@ -192,6 +192,7 @@ def main(): # pragma: no cover
         selected_organisms.append(org_code)
         if len(all_genes_and_kos) > 100000:
             break
+        print(org_code, len(all_genes_and_kos))
 
     print('Number of selected organisms:')
     print(len(selected_organisms))
