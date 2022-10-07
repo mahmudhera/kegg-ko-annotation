@@ -180,18 +180,17 @@ def main(): # pragma: no cover
         if exists(file_with_path):
             list_bacteria_single_chr_with_existing_gene_file.append(org_code)
 
-    print('Number of bacterial organisms with single chromosome and exiting gene file:')
+    print('Number of bacterial organisms with single chromosome and existing gene file:')
     print( len(list_bacteria_single_chr_with_existing_gene_file) )
 
-    # for all these organisms
-        # if kegg gene file not existing, then skip
+    all_genes_and_kos = []
+    for org_code in list_bacteria_single_chr_with_existing_gene_file:
+        gene_filename = make_kegg_gene_file_name(org_code)
+        gene_file_with_path = directory_with_kegg_gene_files + '/' + gene_filename
+        all_genes_and_kos.append( read_gene_id_with_kos_labeled(gene_file_with_path) )
 
-    # report reduced num of organisms
-
-    # for all these organisms:
-        # look in the directory and find all genes with KOs present
-
-    # report num of all genes here
+    print('Number of total genes in these organisms:')
+    print(len(all_genes_and_kos))
 
     # for all these organisms
         # get a list of all the genes with KOs present
