@@ -2,3 +2,5 @@ biopython
 pytest
 pandas
 pytest-cov
+bs4
+requests

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import argparse
 import pandas as pd
+import requests
+from bs4 import BeautifulSoup
 
 def read_organism_table(org_table_filename):
     """
@@ -104,6 +106,42 @@ def read_gene_id_with_kos_labeled(kegg_gene_filename):
     df = df[ ~pd.isnull(df['koid']) ]
     return(  list( zip( df['kegg_gene_id'].tolist(), df['koid'].tolist() ) )  )
 
+def download_page(url): #pragma no cover
+    while True:
+        response = requests.get(url)
+        response.raise_for_status()
+        if response.status_code == 200:
+            break
+    return response.text
+
+def read_gene_start_and_end_positions(kegg_gene_id):
+    """
+    Given kegg gene id, looks up KEGG website, reads response and parses it
+    to obtain start and end position of that gene.
+    :param str kegg_gene_id: id of the gene in kegg database
+    :return: 2-tuple, tuple[0] is start, tuple[1] is end position
+    :rtype: tuple of int
+    """
+    url = "https://www.genome.jp/entry/" + kegg_gene_id
+    content = download_page(url)
+    soup = BeautifulSoup(content, 'html.parser')
+
+    for row in soup.table.find_all('tr'):
+        row_header = row.th
+        row_cell = row.td
+        if row_header is None:
+            continue
+        if row_header.get_text() == "Position":
+            full_text = row_cell.get_text()
+            full_text = full_text.replace('complement(', '')
+            full_text = full_text.replace(')', '')
+            start_end_merged = full_text.split('\n')[0].split(':')[1]
+            start = int( start_end_merged.split('..')[0] )
+            end = int( start_end_merged.split('..')[1] )
+            return start, end
+
+    return (-1, -1)
+
 def parse_args(): # pragma: no cover
     parser = argparse.ArgumentParser(description="This preprocesses kegg_db data files. It opens the organisms table, locates the genomes that has GenBank or RefSeq entries available.",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -153,9 +191,13 @@ def main(): # pragma: no cover
     gene_ids = read_gene_ids(sample_gene_filename)
     print(len(gene_ids))
 
+    print(gene_ids[:10])
+
     sample_gene_filename = 'data/sce_kegg_genes.txt'
     gene_ids = read_gene_id_with_ko(sample_gene_filename)
     print(len(gene_ids))
+
+    print(gene_ids[:10])
 
 if __name__ == '__main__': # pragma: no cover
     main()
