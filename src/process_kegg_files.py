@@ -7,7 +7,7 @@ from os.path import exists
 from Bio import SeqIO
 import os
 import subprocess
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 
 def read_organism_table(org_table_filename):
     """
