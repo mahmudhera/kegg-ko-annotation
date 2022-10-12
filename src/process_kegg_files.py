@@ -229,54 +229,42 @@ def main(): # pragma: no cover
 
     kegg_db_path = '/data/shared_data/KEGG_data/organisms/'
     long_fasta_filename = 'gb_ncbi_organism.fasta'
+
+    print('Indexing the complete fasta file...')
     record_dict = SeqIO.index(kegg_db_path+long_fasta_filename, "fasta")
+
     all_keys = record_dict.keys()
     for org_code in selected_organisms[:2]:
         print('Working with organism ' + org_code)
-        ncbi_ids = org_code_to_ncbi_ids[org_code]
-        print('The NCBI ids we have are:')
-        print(ncbi_ids)
-        ncbi_id = ncbi_ids[0]
-        print('The NCBI id we have is:')
-        print(ncbi_id)
-        print('The associated key is: ')
-        key_in_dict = find_key(all_keys, ncbi_id)
-        print(key_in_dict)
-        print( '> ' + record_dict[key_in_dict].description )
-        print(record_dict[key_in_dict].seq[:100])
 
-        fasta_filename = os.path.join(out_dir, org_code+'.fasta')
+        genome_dir = os.path.join(out_dir, org_code)
+        subprocess.call(['rm', '-rf', genome_dir])
+        subprocess.call(['mkdir', genome_dir])
+
+        fasta_filename = os.path.join(genome_dir, org_code+'.fasta')
         f = open(fasta_filename, 'w')
         f.write('> ' + record_dict[key_in_dict].description + '\n')
         f.write(str(record_dict[key_in_dict].seq))
         f.close()
 
-        print('-----------')
-        print('Iterating over first three genes in this organism: ' + org_code)
-        for gene_name, ko_id in org_code_to_gene_and_ko[org_code][:3]:
-            print(gene_name, ko_id)
+        mapping_records = []
+        mapping_filename = os.path.join(genome_dir, org_code+'_mapping.csv')
+        for gene_name, ko_id in tqdm(org_code_to_gene_and_ko[org_code]):
             start_pos, end_pos = read_gene_start_and_end_positions(gene_name)
-            print(start_pos, end_pos)
-            print(key_in_dict)
-            print(record_dict[key_in_dict].seq[start_pos-1 : end_pos])
-        break
-    # for all these organisms
-        # get a list of all the genes with KOs present
-        # make a directory for this organism
-        # write fasta file in that
+            genome_name = org_code
+            contig_id = key_in_dict
+            assembly_id = org_code + '_' + contig_id
+            gene_name = gene_name
+            protein_id = gene_name
+            start_position = start_pos
+            end_position = end_pos
+            strand = '?'
+            aa_seq = 'invalid'
+            nt_seq = 'invalid'
+            mapping_records.append( (genome_name, contig_id, assembly_id, gene_name, protein_id, start_position, end_position, strand, aa_seq, nt_seq) )
 
-        # for all the genes:
-            # look up KEGG website
-            # get the position of that gene
-            # create an entry in the mapping file
-
-        # write mapping file
-
-    # print number of genes
+        df = pd.DataFrame(mapping_records, columns=['genome_name', 'assembly_id', 'gene_name', 'protein_id', 'contig_id', 'start_position', 'end_position', 'strand', 'aa_sequence', 'nt_sequence'])
+        df.to_csv(mapping_filename)
 
 if __name__ == '__main__': # pragma: no cover
     main()
-
-    ## We now know a lot
-    ## The same exact coords to be used
-    ## But, how to locate the contig??
