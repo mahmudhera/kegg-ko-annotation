@@ -237,6 +237,10 @@ def main(): # pragma: no cover
     for org_code in selected_organisms[:2]:
         print('Working with organism ' + org_code)
 
+        ncbi_ids = org_code_to_ncbi_ids[org_code]
+        ncbi_id = ncbi_ids[0]
+        key_in_dict = find_key(all_keys, ncbi_id)
+
         genome_dir = os.path.join(out_dir, org_code)
         subprocess.call(['rm', '-rf', genome_dir])
         subprocess.call(['mkdir', genome_dir])
