@@ -19,32 +19,38 @@ def test_read_organism_table():
 def test_read_gene_id_with_kos_labeled():
     sample_gene_filename = 'data/sce_kegg_genes.txt'
     gene_id_ko_list = proc.read_gene_id_with_kos_labeled(sample_gene_filename)
-    for gene_id, ko_id in gene_id_ko_list:
+    for gene_id, ko_id, ntseq, aaseq in gene_id_ko_list:
         assert ko_id is not None
 
 def test_read_gene_start_and_end_positions():
     sample_gene_id = 'sce:YAL062W'
     start_correct = 31567
     end_correct = 32940
-    start, end = proc.read_gene_start_and_end_positions(sample_gene_id)
+    strand_correct = '+'
+    start, end, strand = proc.read_gene_start_and_end_positions(sample_gene_id)
     assert start == start_correct
     assert end == end_correct
+    assert strand_correct == strand
 
 def test_read_gene_start_and_end_positions_2():
     sample_gene_id = 'sce:YAL068C'
     start_correct = 1807
     end_correct = 2169
-    start, end = proc.read_gene_start_and_end_positions(sample_gene_id)
+    strand_correct = '-'
+    start, end, strand = proc.read_gene_start_and_end_positions(sample_gene_id)
     assert start == start_correct
     assert end == end_correct
+    assert strand == strand_correct
 
 def test_read_gene_start_and_end_positions_3():
     sample_gene_id = 'eco:b0001'
     start_correct = 190
     end_correct = 255
-    start, end = proc.read_gene_start_and_end_positions(sample_gene_id)
+    strand_correct = '+'
+    start, end, strand = proc.read_gene_start_and_end_positions(sample_gene_id)
     assert start == start_correct
     assert end == end_correct
+    assert strand == strand_correct
 
 def test_make_kegg_gene_file_name():
     org_code = 'sce'

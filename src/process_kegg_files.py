@@ -105,11 +105,11 @@ def read_gene_id_with_kos_labeled(kegg_gene_filename):
     Given a kegg gene filename, returns list of all genes with KO ids available
     :param str kegg_gene_filename: filename with full path
     :return: all gene ids in that file, along with their assigned KO ids
-    :rtype: list of 2-tuples, tuple[0] is the gene id, tuple[1] is the KOid
+    :rtype: list of 4-tuples, tuple[0] is the gene id, tuple[1] is the KOid,  [2] is ntseq, [3] is aaseq
     """
     df = pd.read_csv(kegg_gene_filename, delimiter='\t')
     df = df[ ~pd.isnull(df['koid']) ]
-    return(  list( zip( df['kegg_gene_id'].tolist(), df['koid'].tolist() ) )  )
+    return(  list( zip( df['kegg_gene_id'].tolist(), df['koid'].tolist(), df['ntseq'].tolist(), df['aaseq'] ) )  )
 
 def download_page(url):
     while True:
@@ -124,7 +124,7 @@ def read_gene_start_and_end_positions(kegg_gene_id):
     Given kegg gene id, looks up KEGG website, reads response and parses it
     to obtain start and end position of that gene.
     :param str kegg_gene_id: id of the gene in kegg database
-    :return: 2-tuple, tuple[0] is start, tuple[1] is end position
+    :return: 3-tuple, tuple[0] is start, tuple[1] is end position, tuple[2] is the strand
     :rtype: tuple of int
     """
     url = "https://www.genome.jp/entry/" + kegg_gene_id
@@ -138,12 +138,16 @@ def read_gene_start_and_end_positions(kegg_gene_id):
             continue
         if row_header.get_text() == "Position":
             full_text = row_cell.get_text()
+            if 'complement' in full_text:
+                strand = '-'
+            else:
+                strand = '+'
             full_text = full_text.replace('complement(', '')
             full_text = full_text.replace(')', '')
             start_end_merged = full_text.split('\n')[0].split(':')[-1]
             start = int( start_end_merged.split('..')[0] )
             end = int( start_end_merged.split('..')[1] )
-            return start, end
+            return start, end, strand
 
     return (-1, -1)
 
@@ -253,19 +257,14 @@ def main(): # pragma: no cover
 
         mapping_records = []
         mapping_filename = os.path.join(genome_dir, org_code+'_mapping.csv')
-        for gene_name, ko_id in tqdm(org_code_to_gene_and_ko[org_code][:5]):
-            start_pos, end_pos = read_gene_start_and_end_positions(gene_name)
+        for gene_name, ko_id, nt_seq, aa_seq in tqdm(org_code_to_gene_and_ko[org_code][:5]):
+            start_pos, end_pos, strand = read_gene_start_and_end_positions(gene_name)
             genome_name = org_code
             contig_id = key_in_dict
             assembly_id = org_code + '_' + contig_id
             gene_name = gene_name
             protein_id = gene_name
-            start_position = start_pos
-            end_position = end_pos
-            strand = '?'
-            aa_seq = 'invalid'
-            nt_seq = 'invalid'
-            mapping_records.append( (genome_name, contig_id, assembly_id, gene_name, protein_id, start_position, end_position, strand, aa_seq, nt_seq) )
+            mapping_records.append( (genome_name, assembly_id, gene_name, protein_id, contig_id, start_pos, end_pos, strand, aa_seq, nt_seq) )
 
         df = pd.DataFrame(mapping_records, columns=['genome_name', 'assembly_id', 'gene_name', 'protein_id', 'contig_id', 'start_position', 'end_position', 'strand', 'aa_sequence', 'nt_sequence'])
         df.to_csv(mapping_filename)
