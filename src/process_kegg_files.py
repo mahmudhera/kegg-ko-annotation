@@ -158,7 +158,7 @@ def parse_args(): # pragma: no cover
     parser = argparse.ArgumentParser(description="This preprocesses kegg_db data files. It opens the organisms table, locates the genomes that has GenBank or RefSeq entries available.",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-o', '--org_table_file', type='str', help="The organisms table file.")
-    parser.add_argument('--O', '--out_dir', type='str', help="Full path to the output directory", default='./extracted_genomes')
+    #parser.add_argument('--O', '--out_dir', type='str', help="Full path to the output directory", default='./extracted_genomes')
     args = parser.parse_args()
     return args
 
