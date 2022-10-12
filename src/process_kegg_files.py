@@ -5,6 +5,8 @@ import requests
 from bs4 import BeautifulSoup
 from os.path import exists
 from Bio import SeqIO
+import subprocess
+import os
 
 def read_organism_table(org_table_filename):
     """
@@ -156,6 +158,7 @@ def parse_args(): # pragma: no cover
     parser = argparse.ArgumentParser(description="This preprocesses kegg_db data files. It opens the organisms table, locates the genomes that has GenBank or RefSeq entries available.",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-o', '--org_table_file', type=str, help="The organisms table file.")
+    parser.add_argument('--O', '--out_dir', type='str', help="Full path to the output directory", default='./extracted_genomes')
     args = parser.parse_args()
     return args
 
@@ -173,6 +176,14 @@ def find_key(all_keys, ncbi_id):
 def main(): # pragma: no cover
     args = parse_args()
     org_table_filename = args.org_table_file
+    out_dir = args.out_dir
+
+    print(out_dir)
+    if os.path.exists(out_dir) and not os.path.isfile(out_dir):
+        print('Out directory exists.')
+    else:
+        print('Out directory does not exist, creating...')
+        subprocess.call['mkdir', out_dir]
 
     # get list of all bacteria organisms
     org_code_to_ncbi_ids = read_organism_table(org_table_filename)
@@ -220,7 +231,7 @@ def main(): # pragma: no cover
     long_fasta_filename = 'gb_ncbi_organism.fasta'
     record_dict = SeqIO.index(kegg_db_path+long_fasta_filename, "fasta")
     all_keys = record_dict.keys()
-    for org_code in selected_organisms:
+    for org_code in selected_organisms[:2]:
         print('Working with organism ' + org_code)
         ncbi_ids = org_code_to_ncbi_ids[org_code]
         print('The NCBI ids we have are:')
@@ -234,6 +245,8 @@ def main(): # pragma: no cover
         print( '> ' + record_dict[key_in_dict].description )
         print(record_dict[key_in_dict].seq[:100])
 
+
+
         print('-----------')
         print('Iterating over first three genes in this organism: ' + org_code)
         for gene_name, ko_id in org_code_to_gene_and_ko[org_code][:3]:
@@ -241,7 +254,7 @@ def main(): # pragma: no cover
             start_pos, end_pos = read_gene_start_and_end_positions(gene_name)
             print(start_pos, end_pos)
             print(key_in_dict)
-            print(record_dict[key_in_dict].seq[start_pos-1 : end_pos+1])
+            print(record_dict[key_in_dict].seq[start_pos-1 : end_pos])
         break
     # for all these organisms
         # get a list of all the genes with KOs present

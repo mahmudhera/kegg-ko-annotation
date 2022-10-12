@@ -50,3 +50,15 @@ def test_make_kegg_gene_file_name():
     org_code = 'sce'
     gene_fname = 'sce_kegg_genes.txt'
     assert gene_fname == proc.make_kegg_gene_file_name(org_code)
+
+def test_find_key_1():
+    lst = ['string1.1', 'string2.3']
+    key = 'string1'
+    result = 'string1.1'
+    assert result == proc.find_key(lst, key)
+    key = 'string2'
+    result = 'string2.3'
+    assert result == proc.find_key(lst, key)
+    key = 'string5'
+    result = None
+    assert result == proc.find_key(lst, key)
