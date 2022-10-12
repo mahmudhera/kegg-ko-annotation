@@ -207,7 +207,12 @@ def main(): # pragma: no cover
     record_dict = SeqIO.index(kegg_db_path+long_fasta_filename, "fasta")
     for org_code in selected_organisms:
         print('Working with organism ' + org_code)
-        ncbi_id = org_code_to_ncbi_ids[org_code]
+        ncbi_ids = org_code_to_ncbi_ids[org_code]
+        print('The NCBI ids we have are:')
+        print(ncbi_ids)
+        ncbi_id = ncbi_ids[0]
+        print('The NCBI id we have is:')
+        print(ncbi_id)
         print(record_dict[ncbi_id])
         break
     # for all these organisms
