@@ -241,6 +241,7 @@ def main(): # pragma: no cover
             start_pos, end_pos = read_gene_start_and_end_positions(gene_name)
             print(start_pos, end_pos)
             print(key_in_dict)
+            print(record_dict[key_in_dict].seq[start_pos-1 : end_pos+1])
         break
     # for all these organisms
         # get a list of all the genes with KOs present
