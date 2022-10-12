@@ -197,10 +197,13 @@ def main(): # pragma: no cover
 
     all_genes_and_kos = []
     selected_organisms = []
+    org_code_to_gene_and_ko = {}
     for org_code in list_bacteria_single_chr_with_existing_gene_file:
         gene_filename = make_kegg_gene_file_name(org_code)
         gene_file_with_path = directory_with_kegg_gene_files + '/' + gene_filename
-        all_genes_and_kos = all_genes_and_kos + read_gene_id_with_kos_labeled(gene_file_with_path)
+        gene_and_ko_list = read_gene_id_with_kos_labeled(gene_file_with_path)
+        org_code_to_gene_and_ko[org_code] = gene_and_ko_list
+        all_genes_and_kos = all_genes_and_kos + gene_and_ko_list
         selected_organisms.append(org_code)
         if len(all_genes_and_kos) > 200000:
             break
@@ -228,7 +231,16 @@ def main(): # pragma: no cover
         print('The associated key is: ')
         key_in_dict = find_key(all_keys, ncbi_id)
         print(key_in_dict)
-        print(record_dict[key_in_dict])
+        print( '> ' + record_dict[key_in_dict].description )
+        print(record_dict[key_in_dict].seq[:100])
+
+        print('-----------')
+        print('Iterating over first three genes in this organism: ' + org_code)
+        for gene_name, ko_id in org_code_to_gene_and_ko[org_code][:3]:
+            print(gene_name, ko_id)
+            start_pos, end_pos = read_gene_start_and_end_positions(gene_name)
+            print(start_pos, end_pos)
+            print(key_in_dict)
         break
     # for all these organisms
         # get a list of all the genes with KOs present
