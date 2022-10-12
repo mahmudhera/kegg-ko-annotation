@@ -175,7 +175,6 @@ def find_key(all_keys, ncbi_id):
 
 def main(): # pragma: no cover
     args = parse_args()
-    print(args)
     org_table_filename = args.org_table_file
     out_dir = args.out_dir
 
@@ -184,7 +183,7 @@ def main(): # pragma: no cover
         print('Out directory exists.')
     else:
         print('Out directory does not exist, creating...')
-        subprocess.call['mkdir', out_dir]
+        subprocess.call(['mkdir', out_dir])
 
     # get list of all bacteria organisms
     org_code_to_ncbi_ids = read_organism_table(org_table_filename)
