@@ -137,7 +137,7 @@ def read_gene_start_and_end_positions(kegg_gene_id):
             full_text = row_cell.get_text()
             full_text = full_text.replace('complement(', '')
             full_text = full_text.replace(')', '')
-            start_end_merged = full_text.split('\n')[0].split(':')[1]
+            start_end_merged = full_text.split('\n')[0].split(':')[-1]
             start = int( start_end_merged.split('..')[0] )
             end = int( start_end_merged.split('..')[1] )
             return start, end

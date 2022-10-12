@@ -38,6 +38,14 @@ def test_read_gene_start_and_end_positions_2():
     assert start == start_correct
     assert end == end_correct
 
+def test_read_gene_start_and_end_positions_3():
+    sample_gene_id = 'eco:b0001'
+    start_correct = 190
+    end_correct = 255
+    start, end = proc.read_gene_start_and_end_positions(sample_gene_id)
+    assert start == start_correct
+    assert end == end_correct
+
 def test_make_kegg_gene_file_name():
     org_code = 'sce'
     gene_fname = 'sce_kegg_genes.txt'
