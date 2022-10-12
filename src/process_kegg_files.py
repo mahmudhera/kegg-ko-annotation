@@ -159,6 +159,17 @@ def parse_args(): # pragma: no cover
     args = parser.parse_args()
     return args
 
+def find_key(all_keys, ncbi_id):
+    """
+    Given a list of all keys, find the key corresponding to an NCBI id.
+    The keys in all_keys are the full contig ids. The given ncbi_id should be
+    a substring of one of these keys in the list all_keys.
+    """
+    for key in all_keys:
+        if ncbi_id in key:
+            return key
+    return None
+
 def main(): # pragma: no cover
     args = parse_args()
     org_table_filename = args.org_table_file
@@ -205,6 +216,7 @@ def main(): # pragma: no cover
     kegg_db_path = '/data/shared_data/KEGG_data/organisms/'
     long_fasta_filename = 'gb_ncbi_organism.fasta'
     record_dict = SeqIO.index(kegg_db_path+long_fasta_filename, "fasta")
+    all_keys = record_dict.keys()
     for org_code in selected_organisms:
         print('Working with organism ' + org_code)
         ncbi_ids = org_code_to_ncbi_ids[org_code]
@@ -213,7 +225,10 @@ def main(): # pragma: no cover
         ncbi_id = ncbi_ids[0]
         print('The NCBI id we have is:')
         print(ncbi_id)
-        print(record_dict[ncbi_id])
+        print('The associated key is: ')
+        key_in_dict = find_key(all_keys, ncbi_id)
+        print(key_in_dict)
+        print(record_dict[key_in_dict])
         break
     # for all these organisms
         # get a list of all the genes with KOs present
