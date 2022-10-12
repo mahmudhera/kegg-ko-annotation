@@ -252,6 +252,11 @@ def main(): # pragma: no cover
         ncbi_id = ncbi_ids[0]
         key_in_dict = find_key(all_keys, ncbi_id)
 
+        if key_in_dict is None:
+            print(org_code, ncbi_ids, ncbi_id)
+            print('Problem occurred here!')
+            exit(-1)
+
         genome_dir = os.path.join(out_dir, org_code)
         subprocess.call(['rm', '-rf', genome_dir])
         subprocess.call(['mkdir', genome_dir])
