@@ -5,8 +5,6 @@ import requests
 from bs4 import BeautifulSoup
 from os.path import exists
 from Bio import SeqIO
-import subprocess
-import os
 
 def read_organism_table(org_table_filename):
     """
@@ -157,8 +155,8 @@ def make_kegg_gene_file_name(org_code):
 def parse_args(): # pragma: no cover
     parser = argparse.ArgumentParser(description="This preprocesses kegg_db data files. It opens the organisms table, locates the genomes that has GenBank or RefSeq entries available.",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('-o', '--org_table_file', type='str', help="The organisms table file.")
-    #parser.add_argument('--O', '--out_dir', type='str', help="Full path to the output directory", default='./extracted_genomes')
+    parser.add_argument('-o', '--org_table_file', type=str, help="The organisms table file.")
+    parser.add_argument('--O', '--out_dir', type='str', help="Full path to the output directory", default='./extracted_genomes')
     args = parser.parse_args()
     return args
 
@@ -179,11 +177,6 @@ def main(): # pragma: no cover
     out_dir = args.out_dir
 
     print(out_dir)
-    if os.path.exists(out_dir) and not os.path.isfile(out_dir):
-        print('Out directory exists.')
-    else:
-        print('Out directory does not exist, creating...')
-        subprocess.call['mkdir', out_dir]
 
     # get list of all bacteria organisms
     org_code_to_ncbi_ids = read_organism_table(org_table_filename)
