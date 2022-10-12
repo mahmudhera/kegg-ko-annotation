@@ -5,6 +5,8 @@ import requests
 from bs4 import BeautifulSoup
 from os.path import exists
 from Bio import SeqIO
+import os
+import subprocess
 
 def read_organism_table(org_table_filename):
     """
@@ -177,6 +179,11 @@ def main(): # pragma: no cover
     out_dir = args.out_dir
 
     print(out_dir)
+    if os.path.exists(out_dir) and not os.path.isfile(out_dir):
+        print('Out directory exists.')
+    else:
+        print('Out directory does not exist, creating...')
+        subprocess.call['mkdir', out_dir]
 
     # get list of all bacteria organisms
     org_code_to_ncbi_ids = read_organism_table(org_table_filename)
