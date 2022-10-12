@@ -245,7 +245,11 @@ def main(): # pragma: no cover
         print( '> ' + record_dict[key_in_dict].description )
         print(record_dict[key_in_dict].seq[:100])
 
-
+        fasta_filename = os.path.join(out_dir, org_code+'.fasta')
+        f = open(fasta_filename, 'w')
+        f.write('> ' + record_dict[key_in_dict].description + '\n')
+        f.write(str(record_dict[key_in_dict].seq))
+        f.close()
 
         print('-----------')
         print('Iterating over first three genes in this organism: ' + org_code)
