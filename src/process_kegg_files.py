@@ -8,6 +8,7 @@ from Bio import SeqIO
 import os
 import subprocess
 from tqdm import tqdm
+import random
 
 def read_organism_table(org_table_filename):
     """
@@ -164,6 +165,7 @@ def parse_args(): # pragma: no cover
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-o', '--org_table_file', type=str, help="The organisms table file.")
     parser.add_argument('-O', '--out_dir', type=str, help="Full path to the output directory", default='./extracted_genomes')
+    parser.add_argument('-s', '--seed', type=int, default=0, help="Random seed for shuffling.")
     args = parser.parse_args()
     return args
 
@@ -221,7 +223,7 @@ def main(): # pragma: no cover
         org_code_to_gene_and_ko[org_code] = gene_and_ko_list
         all_genes_and_kos = all_genes_and_kos + gene_and_ko_list
         selected_organisms.append(org_code)
-        if len(all_genes_and_kos) > 200000:
+        if len(all_genes_and_kos) > 500000:
             break
 
     print('Number of selected organisms:')
@@ -237,9 +239,14 @@ def main(): # pragma: no cover
     print('Indexing the complete fasta file...')
     record_dict = SeqIO.index(kegg_db_path+long_fasta_filename, "fasta")
 
+    print('Randomizing the organisms:')
+    random.shuffle(selected_organisms)
+
     all_keys = record_dict.keys()
-    for org_code in selected_organisms[:2]:
-        print('Working with organism ' + org_code)
+    org_count = 1
+    total_orgs = len(selected_organisms)
+    for org_code in selected_organisms:
+        print('Working with organism ' + str(org_count) + '/' + str(total_orgs))
 
         ncbi_ids = org_code_to_ncbi_ids[org_code]
         ncbi_id = ncbi_ids[0]
@@ -254,6 +261,8 @@ def main(): # pragma: no cover
         f.write('> ' + record_dict[key_in_dict].description + '\n')
         f.write(str(record_dict[key_in_dict].seq))
         f.close()
+
+        print('Completed writing fasta file. Now handling the genes...')
 
         mapping_records = []
         mapping_filename = os.path.join(genome_dir, org_code+'_mapping.csv')
