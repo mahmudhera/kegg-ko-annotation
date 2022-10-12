@@ -209,7 +209,7 @@ def main(): # pragma: no cover
     all_genes_and_kos = []
     selected_organisms = []
     org_code_to_gene_and_ko = {}
-    for org_code in list_bacteria_single_chr_with_existing_gene_file:
+    for org_code in tqdm(list_bacteria_single_chr_with_existing_gene_file):
         gene_filename = make_kegg_gene_file_name(org_code)
         gene_file_with_path = directory_with_kegg_gene_files + '/' + gene_filename
         gene_and_ko_list = read_gene_id_with_kos_labeled(gene_file_with_path)
