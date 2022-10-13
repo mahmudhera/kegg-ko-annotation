@@ -245,7 +245,7 @@ def main(): # pragma: no cover
     print('Randomizing the organisms:')
     random.shuffle(selected_organisms)
 
-    all_keys = list(record_dict.keys)
+    all_keys = list(record_dict.keys())
     org_count = 1
     total_orgs = len(selected_organisms)
     for org_code in selected_organisms:
