@@ -248,8 +248,10 @@ def main(): # pragma: no cover
     all_keys = list(record_dict.keys())
     org_count = 1
     total_orgs = len(selected_organisms)
+    num_problematic_genes = 0
     for org_code in selected_organisms:
         print('Working with organism ' + str(org_count) + '/' + str(total_orgs))
+        total_orgs += 1
 
         ncbi_ids = org_code_to_ncbi_ids[org_code]
         ncbi_id = ncbi_ids[0]
@@ -275,11 +277,14 @@ def main(): # pragma: no cover
 
         mapping_records = []
         mapping_filename = os.path.join(genome_dir, org_code+'_mapping.csv')
-        for gene_name, ko_id, nt_seq, aa_seq in tqdm(org_code_to_gene_and_ko[org_code][:10]):
+
+        for gene_name, ko_id, nt_seq, aa_seq in tqdm(org_code_to_gene_and_ko[org_code]):
             try:
                 start_pos, end_pos, strand = read_gene_start_and_end_positions(gene_name)
             except:
-                print('Problem with gene: ' + str(gene_name))
+                num_problematic_genes += 1
+                continue
+                #print('Problem with gene: ' + str(gene_name))
             genome_name = org_code
             contig_id = key_in_dict
             assembly_id = org_code + '_' + contig_id
@@ -289,6 +294,9 @@ def main(): # pragma: no cover
 
         df = pd.DataFrame(mapping_records, columns=['genome_name', 'assembly_id', 'gene_name', 'protein_id', 'contig_id', 'start_position', 'end_position', 'strand', 'aa_sequence', 'nt_sequence'])
         df.to_csv(mapping_filename)
+        print('Problematic genes so far: ' + str(num_problematic_genes))
+
+    print('Found problems in ' + str(num_problematic_genes) + ' genes.')
 
 if __name__ == '__main__': # pragma: no cover
     main()
