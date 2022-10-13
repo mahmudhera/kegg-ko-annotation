@@ -184,6 +184,9 @@ def main(): # pragma: no cover
     args = parse_args()
     org_table_filename = args.org_table_file
     out_dir = args.out_dir
+    seed = args.seed
+
+    random.seed(seed)
 
     print(out_dir)
     if os.path.exists(out_dir) and not os.path.isfile(out_dir):
@@ -254,6 +257,7 @@ def main(): # pragma: no cover
 
         if key_in_dict is None:
             print(org_code, ncbi_ids, ncbi_id)
+            print(all_keys)
             print('Problem occurred here!')
             exit(-1)
 
