@@ -257,7 +257,7 @@ def main(): # pragma: no cover
 
         if key_in_dict is None:
             print(org_code, ncbi_ids, ncbi_id)
-            print(all_keys)
+            print(list(all_keys))
             print('Problem occurred here!')
             exit(-1)
 
