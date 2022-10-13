@@ -43,7 +43,7 @@ def read_organism_table(org_table_filename):
 
     return ret_dic
 
-def read_organism_table_for_single_chr_organisms(org_table_filename):
+def read_organism_table_for_single_chr_bacteria(org_table_filename):
     """
     Takes as argument the organism table filename with full path.
     Returns a dictionary indexed by 3-character organism code, mapping to a list
@@ -199,7 +199,7 @@ def main(): # pragma: no cover
 
     # get all bacteria with single chromosome
     print('Num of all bacteria organism with single chromosome:')
-    org_code_to_ncbi_ids_single_chr = read_organism_table(org_table_filename)
+    org_code_to_ncbi_ids_single_chr = read_organism_table_for_single_chr_bacteria(org_table_filename)
     print( len( org_code_to_ncbi_ids_single_chr.keys() ) )
 
     directory_with_kegg_gene_files = '/data/shared_data/KEGG_data/organisms/kegg_gene_info'
