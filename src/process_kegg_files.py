@@ -245,7 +245,7 @@ def main(): # pragma: no cover
     print('Randomizing the organisms:')
     random.shuffle(selected_organisms)
 
-    all_keys = record_dict.keys()
+    all_keys = list(record_dict.keys)
     org_count = 1
     total_orgs = len(selected_organisms)
     for org_code in selected_organisms:
@@ -275,7 +275,7 @@ def main(): # pragma: no cover
 
         mapping_records = []
         mapping_filename = os.path.join(genome_dir, org_code+'_mapping.csv')
-        for gene_name, ko_id, nt_seq, aa_seq in tqdm(org_code_to_gene_and_ko[org_code][:5]):
+        for gene_name, ko_id, nt_seq, aa_seq in tqdm(org_code_to_gene_and_ko[org_code]):
             start_pos, end_pos, strand = read_gene_start_and_end_positions(gene_name)
             genome_name = org_code
             contig_id = key_in_dict
