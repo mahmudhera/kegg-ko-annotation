@@ -276,7 +276,10 @@ def main(): # pragma: no cover
         mapping_records = []
         mapping_filename = os.path.join(genome_dir, org_code+'_mapping.csv')
         for gene_name, ko_id, nt_seq, aa_seq in tqdm(org_code_to_gene_and_ko[org_code][:10]):
-            start_pos, end_pos, strand = read_gene_start_and_end_positions(gene_name)
+            try:
+                start_pos, end_pos, strand = read_gene_start_and_end_positions(gene_name)
+            except:
+                print('Problem with gene: ' + str(gene_name))
             genome_name = org_code
             contig_id = key_in_dict
             assembly_id = org_code + '_' + contig_id
