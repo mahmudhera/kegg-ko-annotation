@@ -16,6 +16,11 @@ conda install -y -n kegg_ko -c bioconda -c conda-forge -c conda --file requireme
 conda activate kegg_ko
 ```
 
+## Downloaded data
+For now, we have downloaded 114 genomes. Each of these have a fasta file, as well as a mapping file
+storing information of the genes present in that genome. Actual number of genes need to be determined and
+documented here.
+
 ## Workflow
 
 Still not written, work in progress
