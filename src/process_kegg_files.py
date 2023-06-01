@@ -236,6 +236,7 @@ def main(): # pragma: no cover
 
     print('Constructing database now...')
 
+    # TODO: change things here!
     kegg_db_path = '/data/shared_data/KEGG_data/organisms/'
     long_fasta_filename = 'gb_ncbi_organism.fasta'
 
