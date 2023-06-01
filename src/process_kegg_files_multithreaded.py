@@ -291,8 +291,8 @@ def main(): # pragma: no cover
         # use multiprocessing here
         process_pool = multiprocessing.Pool(num_processes)
         gene_start_end_strand_infos = process_pool.map(read_gene_start_and_end_positions, gene_names)
-        pool.close()
-        pool.join()
+        process_pool.close()
+        process_pool.join()
 
         # using the gene names, generate gene start, end positions, and strand info
         # the following line is a single threaded version
