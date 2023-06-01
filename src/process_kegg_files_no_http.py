@@ -265,10 +265,8 @@ def main(): # pragma: no cover
     print('Number of bacterial organisms with single chromosome and existing gene & kff file:')
     print( len(list_bacteria_single_chr_with_existing_gene_file) )
 
-    # randomly shuffle the list of these interesting org_codes
-    # random.shuffle(list_bacteria_single_chr_with_existing_gene_file)
-
     # now, select only a few so that we have 500K genes
+    '''
     all_genes_and_kos = []
     selected_organisms = []
     org_code_to_gene_and_ko = {}
@@ -281,11 +279,14 @@ def main(): # pragma: no cover
         selected_organisms.append(org_code)
         if len(all_genes_and_kos) > 500000:
             break
+    '''
+    selected_organisms = list(list_bacteria_single_chr_with_existing_gene_file)
+    print( f'Num of total organisms: {len(selected_organisms)}' )
 
-    print('Number of selected organisms:')
-    print(len(selected_organisms))
-    print('Number of total genes in these organisms:')
-    print(len(all_genes_and_kos))
+    #print('Number of selected organisms:')
+    #print(len(selected_organisms))
+    #print('Number of total genes in these organisms:')
+    #print(len(all_genes_and_kos))
 
     print('Constructing database now...')
     # TODO: change things here -- these are hardcoded!
@@ -298,7 +299,7 @@ def main(): # pragma: no cover
     end_time = time.time()
     print(f'Indexing complete. It took {end_time-start_time} seconds')
 
-    print('Randomizing the organisms:')
+    print('Randomizing the organisms...')
     random.shuffle(selected_organisms)
 
     all_keys = list(record_dict.keys())
@@ -367,6 +368,7 @@ def main(): # pragma: no cover
                 end_pos = int( start_end_merged.split('..')[1] )
             # record how many times this fails
             except:
+                print(f'Problematic gene: {gene_name}. Position string: {position_string}')
                 num_problematic_genes += 1
                 continue
                 #print('Problem with gene: ' + str(gene_name))
