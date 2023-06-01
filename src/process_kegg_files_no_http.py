@@ -266,7 +266,6 @@ def main(): # pragma: no cover
     print( len(list_bacteria_single_chr_with_existing_gene_file) )
 
     # now, select only a few so that we have 500K genes
-    '''
     all_genes_and_kos = []
     selected_organisms = []
     org_code_to_gene_and_ko = {}
@@ -278,9 +277,7 @@ def main(): # pragma: no cover
         all_genes_and_kos = all_genes_and_kos + gene_and_ko_list
         selected_organisms.append(org_code)
         if len(all_genes_and_kos) > 500000:
-            break
-    '''
-    selected_organisms = list(list_bacteria_single_chr_with_existing_gene_file)
+
     print( f'Num of total organisms: {len(selected_organisms)}' )
 
     #print('Number of selected organisms:')
