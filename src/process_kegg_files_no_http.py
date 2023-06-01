@@ -276,6 +276,8 @@ def main(): # pragma: no cover
         org_code_to_gene_and_ko[org_code] = gene_and_ko_list
         all_genes_and_kos = all_genes_and_kos + gene_and_ko_list
         selected_organisms.append(org_code)
+        if len(all_genes_and_kos) > 500000:
+            break
 
     print( f'Num of total organisms: {len(selected_organisms)}' )
 
@@ -300,6 +302,7 @@ def main(): # pragma: no cover
 
     all_keys = list(record_dict.keys())
     num_problematic_genes = 0
+    f = open('problematic_genes.log', 'w')
     for org_code in tqdm(selected_organisms):
         ncbi_ids = org_code_to_ncbi_ids[org_code]
         ncbi_id = ncbi_ids[0]
@@ -341,7 +344,6 @@ def main(): # pragma: no cover
         for gene_id, position_string in list( zip(gene_ids, position_strings) ):
             gene_id_to_position_string[gene_id] = position_string
 
-        f = open('problematic_genes.log')
         for gene_name, ko_id, nt_seq, aa_seq in org_code_to_gene_and_ko[org_code]:
             try:
                 # get the position string from the dict using gene_name/gene_id
@@ -380,6 +382,7 @@ def main(): # pragma: no cover
         df.to_csv(mapping_filename)
 
     print('Found problems in ' + str(num_problematic_genes) + ' genes.')
+    f.close()
 
 if __name__ == '__main__': # pragma: no cover
     main()
