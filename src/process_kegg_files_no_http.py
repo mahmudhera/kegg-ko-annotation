@@ -302,7 +302,7 @@ def main(): # pragma: no cover
 
     all_keys = list(record_dict.keys())
     num_problematic_genes = 0
-    f = open('problematic_genes.log', 'w')
+    f_problems = open('problematic_genes.log', 'w')
     for org_code in tqdm(selected_organisms):
         ncbi_ids = org_code_to_ncbi_ids[org_code]
         ncbi_id = ncbi_ids[0]
@@ -362,7 +362,7 @@ def main(): # pragma: no cover
                 end_pos = int( start_end_merged.split('..')[1] )
             # record how many times this fails
             except:
-                f.write(f'{gene_name}\t{position_string}\n')
+                f_problems.write(f'{gene_name}\t{position_string}\n')
                 num_problematic_genes += 1
                 continue
                 #print('Problem with gene: ' + str(gene_name))
@@ -382,7 +382,7 @@ def main(): # pragma: no cover
         df.to_csv(mapping_filename)
 
     print('Found problems in ' + str(num_problematic_genes) + ' genes.')
-    f.close()
+    f_problems.close()
 
 if __name__ == '__main__': # pragma: no cover
     main()
