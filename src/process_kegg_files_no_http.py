@@ -276,7 +276,6 @@ def main(): # pragma: no cover
         org_code_to_gene_and_ko[org_code] = gene_and_ko_list
         all_genes_and_kos = all_genes_and_kos + gene_and_ko_list
         selected_organisms.append(org_code)
-        if len(all_genes_and_kos) > 500000:
 
     print( f'Num of total organisms: {len(selected_organisms)}' )
 
