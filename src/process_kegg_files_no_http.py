@@ -279,10 +279,10 @@ def main(): # pragma: no cover
 
     print( f'Num of total organisms: {len(selected_organisms)}' )
 
-    #print('Number of selected organisms:')
-    #print(len(selected_organisms))
-    #print('Number of total genes in these organisms:')
-    #print(len(all_genes_and_kos))
+    print('Number of selected organisms:')
+    print(len(selected_organisms))
+    print('Number of total genes in these organisms:')
+    print(len(all_genes_and_kos))
 
     print('Constructing database now...')
     # TODO: change things here -- these are hardcoded!
@@ -323,8 +323,6 @@ def main(): # pragma: no cover
         f.write(str(record_dict[key_in_dict].seq))
         f.close()
 
-        print('Completed writing fasta file. Now handling the genes...')
-
         # list for keeping mapping records, and the mapping filename
         mapping_records = []
         mapping_filename = os.path.join(genome_dir, org_code+'_mapping.csv')
@@ -343,23 +341,26 @@ def main(): # pragma: no cover
         for gene_id, position_string in list( zip(gene_ids, position_strings) ):
             gene_id_to_position_string[gene_id] = position_string
 
+        f = open('problematic_genes.log')
         for gene_name, ko_id, nt_seq, aa_seq in org_code_to_gene_and_ko[org_code]:
-            # get the position string from the dict using gene_name/gene_id
-            position_string = gene_id_to_position_string[gene_name]
-            # extract the positions
             try:
+                # get the position string from the dict using gene_name/gene_id
+                position_string = gene_id_to_position_string[gene_name]
+                # extract the positions
                 if 'complement' in position_string:
                     strand = '-'
                 else:
                     strand = '+'
                 full_text = position_string.replace('complement(', '')
                 full_text = full_text.replace(')', '')
+                full_text = full_text.replace('<', '')
+                full_text = full_text.replace('>', '')
                 start_end_merged = full_text.split('\n')[0].split(':')[-1]
                 start_pos = int( start_end_merged.split('..')[0] )
                 end_pos = int( start_end_merged.split('..')[1] )
             # record how many times this fails
             except:
-                print(f'Problematic gene: {gene_name}. Position string: {position_string}')
+                f.write(f'{gene_name}\t{position_string}\n')
                 num_problematic_genes += 1
                 continue
                 #print('Problem with gene: ' + str(gene_name))
