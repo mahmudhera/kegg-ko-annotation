@@ -303,13 +303,8 @@ def main(): # pragma: no cover
     random.shuffle(selected_organisms)
 
     all_keys = list(record_dict.keys())
-    org_count = 1
-    total_orgs = len(selected_organisms)
     num_problematic_genes = 0
-    for org_code in selected_organisms:
-        print('Working with organism ' + str(org_count) + '/' + str(total_orgs))
-        org_count += 1
-
+    for org_code in tqdm(selected_organisms):
         ncbi_ids = org_code_to_ncbi_ids[org_code]
         ncbi_id = ncbi_ids[0]
         key_in_dict = find_key(all_keys, ncbi_id)
@@ -352,7 +347,7 @@ def main(): # pragma: no cover
         for gene_id, position_string in list( zip(gene_ids, position_strings) ):
             gene_id_to_position_string[gene_id] = position_string
 
-        for gene_name, ko_id, nt_seq, aa_seq in tqdm(org_code_to_gene_and_ko[org_code]):
+        for gene_name, ko_id, nt_seq, aa_seq in org_code_to_gene_and_ko[org_code]:
             # get the position string from the dict using gene_name/gene_id
             position_string = gene_id_to_position_string[gene_name]
             # extract the positions
@@ -386,7 +381,6 @@ def main(): # pragma: no cover
         # write to file
         df = pd.DataFrame(mapping_records, columns=['genome_name', 'assembly_id', 'gene_name', 'protein_id', 'contig_id', 'start_position', 'end_position', 'strand', 'aa_sequence', 'nt_sequence'])
         df.to_csv(mapping_filename)
-        print('Problematic genes so far: ' + str(num_problematic_genes))
 
     print('Found problems in ' + str(num_problematic_genes) + ' genes.')
 
