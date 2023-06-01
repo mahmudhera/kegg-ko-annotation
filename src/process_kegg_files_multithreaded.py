@@ -10,6 +10,7 @@ import subprocess
 from tqdm import tqdm
 import random
 import multiprocessing
+import time
 
 num_processes = 64
 
@@ -247,7 +248,10 @@ def main(): # pragma: no cover
     long_fasta_filename = 'gb_ncbi_organism.fasta'
 
     print('Indexing the complete fasta file...')
+    start_time = time.time()
     record_dict = SeqIO.index(kegg_db_path+long_fasta_filename, "fasta")
+    end_time = time.time()
+    print(f'Indexing complete. It took {end_time-start_time} seconds')
 
     print('Randomizing the organisms:')
     random.shuffle(selected_organisms)
