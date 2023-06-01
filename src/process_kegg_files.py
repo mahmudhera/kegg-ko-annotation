@@ -205,13 +205,15 @@ def main(): # pragma: no cover
     org_code_to_ncbi_ids_single_chr = read_organism_table_for_single_chr_bacteria(org_table_filename)
     print( len( org_code_to_ncbi_ids_single_chr.keys() ) )
 
-    directory_with_kegg_gene_files = '/data/shared_data/KEGG_data/organisms/kegg_gene_info'
+    directory_with_kegg_gene_files = '/scratch/shared_data/archive/KEGG_data/organisms/kegg_gene_info'
     list_bacteria_single_chr_with_existing_gene_file = []
     for org_code in org_code_to_ncbi_ids_single_chr.keys():
         gene_filename = make_kegg_gene_file_name(org_code)
         file_with_path = directory_with_kegg_gene_files + '/' + gene_filename
         if exists(file_with_path):
             list_bacteria_single_chr_with_existing_gene_file.append(org_code)
+        else:
+            print(f'{file_with_path} was not found!')
 
     print('Number of bacterial organisms with single chromosome and existing gene file:')
     print( len(list_bacteria_single_chr_with_existing_gene_file) )
@@ -237,7 +239,7 @@ def main(): # pragma: no cover
     print('Constructing database now...')
 
     # TODO: change things here!
-    kegg_db_path = '/data/shared_data/KEGG_data/organisms/'
+    kegg_db_path = '/scratch/shared_data/archive/KEGG_data/organisms/'
     long_fasta_filename = 'gb_ncbi_organism.fasta'
 
     print('Indexing the complete fasta file...')
