@@ -338,7 +338,7 @@ def main(): # pragma: no cover
         kff_filename = t_number + '.kff'
         file_with_path = directory_with_kegg_kff_files + '/' + kff_filename
         #read in a dataframe
-        df = pd.read_csv('T01005.kff', delimiter='\t', header = None)
+        df = pd.read_csv(file_with_path, delimiter='\t', header = None)
         gene_ids = df[0].tolist()
         position_strings = df[4].tolist()
 
