@@ -276,8 +276,8 @@ def main(): # pragma: no cover
         org_code_to_gene_and_ko[org_code] = gene_and_ko_list
         all_genes_and_kos = all_genes_and_kos + gene_and_ko_list
         selected_organisms.append(org_code)
-        if len(all_genes_and_kos) > 500000:
-            break
+        #if len(all_genes_and_kos) > 500000:
+        #    break
 
     print( f'Num of total organisms: {len(selected_organisms)}' )
 
@@ -362,6 +362,10 @@ def main(): # pragma: no cover
                 end_pos = int( start_end_merged.split('..')[1] )
             # record how many times this fails
             except:
+                try:
+                    position_string = gene_id_to_position_string[gene_name]
+                except:
+                    position_string = None
                 f_problems.write(f'{gene_name}\t{position_string}\n')
                 num_problematic_genes += 1
                 continue
